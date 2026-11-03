@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Leap — Study Abroad Prototype</title>
+<style>
+:root{--purple:#7651d1;--purple2:#7954d5;--ink:#171321;--muted:#625d6d;--line:#e8e3ee;--pale:#f2eff8}
+*{box-sizing:border-box}body{margin:0;background:var(--pale);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink)}
+.wrap{min-height:100vh;display:flex;justify-content:center;align-items:flex-start;padding:24px 12px}
+.phone{width:100%;max-width:410px;min-height:760px;background:#fff;border:1px solid #e6e0ee;border-radius:26px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 10px 36px #24134418}
+.status{height:28px;display:flex;justify-content:space-between;align-items:center;padding:0 20px;background:#fff;color:#111;font-size:11px;font-weight:750}
+header{height:58px;background:#fff;color:#111;border-bottom:1px solid #efedf2;display:flex;align-items:center;justify-content:space-between;padding:0 21px}
+.logo{font-size:25px;font-weight:850;letter-spacing:-1.3px;color:#111}.logo span{color:var(--purple)}
+.step{font-size:10px;letter-spacing:1px;color:#777;font-weight:800}.bar{height:3px;background:#f0edf5}.bar i{height:3px;display:block;background:var(--purple);width:15%;transition:width .2s}
+main{padding:24px 21px 20px;flex:1;min-height:590px}.eyebrow{font-size:10px;font-weight:850;letter-spacing:1.4px;color:var(--purple);margin-bottom:12px}
+h1{font-size:29px;line-height:1.13;letter-spacing:-.9px;font-weight:850;color:#111;margin:0 0 12px}h2{font-size:20px;line-height:1.25;font-weight:800;color:#111;margin:0 0 9px}
+p{font-size:13px;line-height:1.58;color:var(--muted);margin:0 0 17px}.small{font-size:11px;color:#777181}.label{font-size:10px;letter-spacing:.8px;font-weight:850;color:#111;margin:20px 0 9px}
+.btn{width:100%;border:0;border-radius:12px;padding:14px;background:var(--purple);color:white;font-weight:800;font-size:14px;margin-top:12px;cursor:pointer}.btn.alt{background:#f1edfa;color:#6746b8}.btn:disabled{opacity:.4;cursor:not-allowed}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 18px}.chip{border:1px solid #e2ddea;border-radius:10px;padding:10px 12px;background:#fff;color:#40394b;font-size:12px;font-weight:650;cursor:pointer}.chip.on{border-color:var(--purple2);background:#f2edfc;color:#6847ba}
+input[type=text],input[type=number]{width:100%;border:1px solid #ded9e8;border-radius:10px;padding:12px;font-size:13px;color:var(--ink);background:#fff}input:focus{outline:2px solid #d8cbf5}
+.panel{border:1px solid var(--line);border-radius:14px;padding:14px;margin:10px 0}.uni{font-size:15px;font-weight:850;color:#111;margin:9px 0 5px}.tag{font-size:9px;font-weight:850;letter-spacing:.8px;color:var(--purple);background:#f1edfa;padding:5px 7px;border-radius:5px}
+.stats{display:flex;gap:8px;margin-top:12px}.stat{flex:1;background:#f7f5fa;border-radius:8px;padding:9px;font-size:10px;color:#706a7b}.stat b{display:block;color:#171321;font-size:12px;margin-top:4px}
+.budget{font-size:29px;font-weight:850;color:#111;margin:12px 0 4px}input[type=range]{width:100%;accent-color:var(--purple);margin:15px 0}
+.note{padding:10px;background:#faf8fc;border-radius:9px;color:#777181;font-size:10px;line-height:1.5;margin-top:13px}
+.chat{padding:11px 12px;border-radius:13px;background:#f1edf9;color:#302a3d;font-size:12px;line-height:1.5;margin:10px 0;max-width:90%}.mine{margin-left:auto;background:var(--purple);color:#fff}.chatinput{display:flex;gap:7px;margin-top:14px}.chatinput input{flex:1;min-width:0}.chatinput button{border:0;border-radius:10px;background:var(--purple);color:white;padding:0 15px;font-weight:750}
+.plan{border:1px solid #e5dfed;border-radius:12px;padding:13px;margin:10px 0;cursor:pointer}.plan.on{border:2px solid var(--purple2);background:#f5f1fc;padding:12px}
+nav{height:64px;border-top:1px solid #eeeaf4;display:flex;justify-content:space-around;align-items:center;background:#fff}nav button{background:none;border:0;color:#827c8d;font-size:9px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer}nav button.active{color:var(--purple);font-weight:850}nav strong{font-size:18px;line-height:18px}
+@media(min-width:700px){.wrap{padding-top:34px}.phone{min-height:780px}}
+</style>
+</head>
+<body>
+<div class="wrap"><div class="phone">
+<div class="status"><span>9:41</span><span>● ● ●　▰</span></div>
+<header><div class="logo">Leap<span>.</span></div><div class="step" id="stepname">WELCOME</div></header>
+<div class="bar"><i id="progress"></i></div>
+<main id="screen" aria-live="polite"></main>
+<nav>
+<button data-nav="home" class="active"><strong>⌂</strong>Home</button>
+<button data-nav="explore"><strong>⌕</strong>Explore</button>
+<button data-nav="shortlist"><strong>♡</strong>Shortlist</button>
+<button data-nav="pro"><strong>✦</strong>Leap Pro</button>
+<button data-nav="profiletab"><strong>○</strong>Profile</button>
+</nav>
+</div></div>
+<script>
+(()=>{
+const $=id=>document.getElementById(id),screen=$('screen');
+let page='welcome',destination='',degree='',cgpa='',experience='',budget=35,funding='Self-funded',plan='3 months',questions=3,shortlisted=[];
+const titles={welcome:'WELCOME',destination:'YOUR GOALS',profile:'YOUR PROFILE',budget:'YOUR BUDGET',matches:'YOUR MATCHES',arya:'ASK ARYA',pro:'LEAP PRO',checkout:'SUBSCRIPTION',home:'HOME',explore:'DISCOVER',shortlist:'SHORTLIST',profiletab:'PROFILE'};
+const widths={welcome:12,destination:28,profile:45,budget:62,matches:78,arya:90,pro:100,checkout:100,home:100,explore:100,shortlist:100,profiletab:100};
+function go(p){page=p;render()}
+function chips(items,selected){return `<div class="chips">${items.map(x=>`<button class="chip ${selected===x?'on':''}" data-choice="${x}">${x}</button>`).join('')}</div>`}
+function render(){
+$('stepname').textContent=titles[page]||'LEAP';$('progress').style.width=(widths[page]||100)+'%';
+let html='';
+if(page==='welcome')html=`<div class="eyebrow">YOUR STUDY ABROAD JOURNEY</div><h1>Make your study abroad dream a plan.</h1><p>Find universities that match your profile, budget and ambitions. Arya will guide you at every step.</p><div class="panel" style="background:#f3effb;border:0;padding:20px;margin:25px 0"><div style="font-size:11px;color:#7651d1;font-weight:850">YOUR PERSONAL STUDY COMPANION</div><div style="font-size:21px;font-weight:850;color:#171321;margin:10px 0">Less guessing.<br>More informed decisions.</div><p style="margin:0">A clearer path to your future university.</p></div><button class="btn" data-go="destination">Get started →</button><div class="small" style="text-align:center;margin-top:12px">Takes about 60 seconds</div>`;
+if(page==='destination')html=`<div class="eyebrow">STEP 1 OF 4</div><h1>Where do you want to study?</h1><p>Tell us a little about the future you're imagining.</p><div class="label">PREFERRED DESTINATION</div>${chips(['United States','United Kingdom','Canada','Germany','Australia','Ireland'],destination)}<div class="label">DEGREE LEVEL</div>${chips(['Undergraduate','Postgraduate','MBA','PhD'],degree)}<button class="btn" data-go="profile" ${!destination||!degree?'disabled':''}>Continue →</button>`;
+if(page==='profile')html=`<div class="eyebrow">STEP 2 OF 4</div><h1>Let's understand your profile.</h1><p style="color:#111">Your grades and experience help us assess your profile before recommending universities.</p><div class="label">UNDERGRADUATE CGPA</div><input id="cgpa" type="number" min="0" max="10" step=".1" placeholder="e.g. 8.2" value="${cgpa}"><div class="label">WORK EXPERIENCE</div>${chips(['No experience','Less than 1 year','1–2 years','3–5 years','5+ years'],experience)}<button class="btn" data-action="saveprofile">Continue →</button>`;
+if(page==='budget')html=`<div class="eyebrow">STEP 3 OF 4</div><h1>What's your comfortable budget?</h1><p>Set a total budget for tuition and living expenses. You can change this later.</p><div class="budget" id="budgetvalue">₹${budget} lakh</div><input id="budget" type="range" min="10" max="100" step="1" value="${budget}"><div style="display:flex;justify-content:space-between;font-size:10px;color:#777"><span>₹10 lakh</span><span>₹100 lakh+</span></div><div class="label">HOW WILL YOU FUND YOUR STUDIES?</div>${chips(['Self-funded','Education loan','Scholarship','Combination'],funding)}<button class="btn" data-go="matches">Show my matches →</button>`;
+if(page==='matches')html=`<div class="eyebrow">YOUR INITIAL MATCHES</div><h1>Your first 3 university matches</h1><p>Explore a starting shortlist based on the details you shared.</p><div class="panel"><span class="tag">REACH</span><div class="uni">Northwestern University</div><p>Competitive option with a strong academic reputation.</p><div class="stats"><div class="stat">Illustrative tuition<b>~$66,300</b></div><div class="stat">Match type<b>Reach</b></div></div></div><div class="panel"><span class="tag">TARGET</span><div class="uni">CSU Fullerton</div><p>A target option to explore further.</p><div class="stats"><div class="stat">Illustrative tuition<b>~$35,000</b></div><div class="stat">Match type<b>Target</b></div></div></div><div class="panel"><span class="tag">SAFE</span><div class="uni">Florida State University</div><p>A further option for your shortlist.</p><div class="stats"><div class="stat">Illustrative tuition<b>~$38,700</b></div><div class="stat">Match type<b>Safe</b></div></div></div><div class="note">Illustrative examples only, not verified admissions predictions or current fee quotes. Actual fit depends on course, academic history and university requirements.</div><button class="btn" data-go="arya">Ask Arya about my matches →</button><button class="btn alt" data-go="pro">Unlock my full shortlist</button>`;
+if(page==='arya')html=`<div class="eyebrow">YOUR AI STUDY COMPANION</div><h1>Talk to Arya</h1><p>Ask questions about universities, applications and your study abroad plans.</p><div class="chat">Hi! I'm Arya. I've got your initial profile and university matches. What would you like to explore?</div><div id="messages"></div><div class="label">TRY ASKING</div>${chips(['How can I improve my chances?','What scholarships can I explore?','Compare my university matches'],'')}<div class="small" id="remaining">${questions} free questions remaining</div><div class="chatinput"><input id="question" type="text" placeholder="Ask Arya a question…"><button data-action="send">Send</button></div>${questions===0?'<button class="btn alt" data-go="pro">Explore Leap Pro</button>':''}`;
+if(page==='pro')html=`<div class="eyebrow">GO FURTHER WITH LEAP</div><h1>Your study abroad journey, fully unlocked.</h1><p>Get the tools and guidance to move from exploring to applying.</p><div class="panel"><b style="font-size:16px">Leap Pro includes</b><p style="margin:12px 0 0">✓ 30+ personalised university shortlist<br><br>✓ Unlimited conversations with Arya<br><br>✓ University ROI calculator<br><br>✓ Scholarships and application deadlines<br><br>✓ Application reminders<br><br>✓ SOP and essay feedback<br><br>✓ Counselor call</p></div><div class="plan ${plan==='1 month'?'on':''}" data-plan="1 month"><b>₹149 / month</b><div class="small">Flexible monthly plan</div></div><div class="plan ${plan==='3 months'?'on':''}" data-plan="3 months"><b>₹299 / 3 months</b><div class="small">₹99/month · Best value</div></div><button class="btn" data-go="checkout">Continue with Leap Pro →</button>`;
+if(page==='checkout')html=`<div class="eyebrow">ORDER SUMMARY</div><h1>You're one step closer.</h1><div class="panel"><b style="font-size:16px">Leap Pro · ${plan}</b><p style="margin:8px 0">Personalised university guidance and application tools.</p><div style="font-size:26px;font-weight:850;color:#111">${plan==='1 month'?'₹149':'₹299'}</div></div><div class="note">Prototype checkout only. No payment will be taken.</div><button class="btn" data-action="confirm">Confirm prototype subscription</button><button class="btn alt" data-go="pro">Back</button>`;
+if(page==='home')html=`<div class="eyebrow">YOUR DASHBOARD</div><h1>Your study abroad journey.</h1><p>Pick up where you left off.</p><div class="panel"><span class="tag">PROFILE</span><h2 style="margin-top:10px">Your profile is taking shape</h2><p>${destination||'Destination not selected'} · ${degree||'Degree not selected'}</p><button class="btn alt" data-go="profile">Update profile</button></div><div class="panel"><h2>University matches</h2><p>Review your initial recommendations.</p><button class="btn" data-go="matches">View matches</button></div><div class="panel"><h2>Meet Arya</h2><p>Your study abroad companion is ready.</p><button class="btn alt" data-go="arya">Ask Arya</button></div>`;
+if(page==='explore')html=`<div class="eyebrow">DISCOVER</div><h1>Explore universities.</h1><p>Start with your recommended university matches.</p><button class="btn" data-go="matches">View university matches</button><button class="btn alt" data-go="arya">Ask Arya for guidance</button>`;
+if(page==='shortlist')html=`<div class="eyebrow">YOUR UNIVERSITIES</div><h1>Your shortlist.</h1><p>Your initial university recommendations.</p>${['Northwestern University','CSU Fullerton','Florida State University'].map(n=>`<div class="panel"><div class="uni">${n}</div><button class="chip ${shortlisted.includes(n)?'on':''}" data-save="${n}">${shortlisted.includes(n)?'Saved ✓':'＋ Save to shortlist'}</button></div>`).join('')}<button class="btn" data-go="pro">Unlock 30+ universities</button>`;
+if(page==='profiletab')html=`<div class="eyebrow">YOUR ACCOUNT</div><h1>Your profile.</h1><p>Review your study preferences and profile details.</p><div class="panel"><div class="label">DESTINATION</div><b>${destination||'Not selected'}</b><div class="label">DEGREE</div><b>${degree||'Not selected'}</b><div class="label">CGPA</div><b>${cgpa||'Not entered'}</b><div class="label">BUDGET</div><b>₹${budget} lakh</b></div><button class="btn" data-go="destination">Edit preferences</button>`;
+screen.innerHTML=html;
+screen.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
+screen.querySelectorAll('[data-choice]').forEach(b=>b.onclick=()=>{let v=b.dataset.choice;if(page==='arya'){send(v);return}if(page==='profile'){let field=$('cgpa');if(field)cgpa=field.value}if(page==='destination'&&['United States','United Kingdom','Canada','Germany','Australia','Ireland'].includes(v))destination=v;else if(page==='destination')degree=v;else if(page==='profile')experience=v;else if(page==='budget')funding=v;render()});
+screen.querySelectorAll('[data-plan]').forEach(b=>b.onclick=()=>{plan=b.dataset.plan;render()});
+screen.querySelectorAll('[data-save]').forEach(b=>b.onclick=()=>{let n=b.dataset.save;shortlisted=shortlisted.includes(n)?shortlisted.filter(x=>x!==n):[...shortlisted,n];render()});
+screen.querySelectorAll('[data-action]').forEach(b=>b.onclick=()=>{if(b.dataset.action==='saveprofile'){cgpa=$('cgpa').value;if(cgpa===''||Number(cgpa)<0||Number(cgpa)>10){$('cgpa').focus();return}go('budget')}if(b.dataset.action==='send'){let v=$('question').value.trim();if(v)send(v)}if(b.dataset.action==='confirm'){screen.innerHTML=`<div class="eyebrow">PROTOTYPE COMPLETE</div><h1>Leap Pro selected.</h1><p>Your prototype subscription flow is complete. No payment was processed.</p><button class="btn" id="finish">Back to home</button>`;$('finish').onclick=()=>go('home')}});
+if(page==='budget')$('budget').oninput=e=>{$('budgetvalue').textContent='₹'+e.target.value+' lakh';budget=+e.target.value};
+document.querySelectorAll('#leapapp nav [data-nav]').forEach(b=>{b.classList.toggle('active',b.dataset.nav===page);b.onclick=()=>go(b.dataset.nav)});
+}
+function send(v){let m=$('messages');if(!m)return;if(questions<=0){let rem=$('remaining');if(rem)rem.textContent='You’ve used your 3 free questions.';return}let a=document.createElement('div'),r=document.createElement('div');a.className='chat mine';a.textContent=v;r.className='chat';r.textContent='That’s a useful question. Compare programme requirements, total costs and application deadlines for each university. I can help you explore those factors.';m.append(a,r);questions--;let rem=$('remaining');if(rem)rem.textContent=questions+' free questions remaining';let inp=$('question');if(inp)inp.value='';if(questions===0&&!screen.querySelector('[data-go="pro"]')){let cta=document.createElement('button');cta.className='btn alt';cta.textContent='Explore Leap Pro';cta.onclick=()=>go('pro');screen.appendChild(cta)}}
+render();
+})();
+</script>
+</body>
+</html>
